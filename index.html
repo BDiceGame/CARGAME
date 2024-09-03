@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Flip Game</title>
+    <style>
+        
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;background-image: url('back.png'); /* Default background image */
+            background-size: cover; /* Cover the entire page */
+            background-position: center; /* Center the background image */
+
+        }
+        #welcome-message {
+            margin-bottom: 10px;
+            font-weight:900;
+            color: red;
+            font-size: 36px;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+        #player-turn {
+            margin-bottom: 20px;
+            font-weight: 900;
+            color: rgb(52, 17, 227);
+            font-size: 36px;            
+        }
+        #player1-score,#player2-score{
+            margin-top: 20px;
+            text-align: left;
+            font-weight: bolder;
+            font-size: 25px;
+        }
+
+        .cards-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .card {
+            width: 275px;
+            height: 183px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.2s;
+            transform-style: preserve-3d;
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .card-front {
+            background: gray;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+        }
+
+        .card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-back img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+    </style>
+</head>
+<body>
+    <div id="welcome-message">Welcome to the Card Flip Game!</div>
+    <div id="player-turn">Player 1's Turn</div>
+    <div id="player1-score">Player 1 Score: 0</div>
+    <div id="player2-score">Player 2 Score: 0</div>
+    <div class="cards-container">
+        <div class="card" id="card1">
+            <div class="card-inner">
+                <div class="card-front">Flip Me!</div>
+                <div class="card-back">
+                    <img src="car5.jpg" alt="Hidden Image">
+                </div>
+            </div>
+        </div>
+        <div class="card" id="card2">
+            <div class="card-inner">
+                <div class="card-front">Flip Me!</div>
+                <div class="card-back">
+                    <img src="car2.jpg" alt="Hidden Image">
+                </div>
+            </div>
+        </div>
+        <div class="card" id="card3">
+            <div class="card-inner">
+                <div class="card-front">Flip Me!</div>
+                <div class="card-back">
+                    <img src="car3.jpg" alt="Hidden Image">
+                </div>
+            </div>
+        </div>
+        <div class="card" id="card4">
+            <div class="card-inner">
+                <div class="card-front">Flip Me!</div>
+                <div class="card-back">
+                    <img src="car4.jpg" alt="Hidden Image">
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let playerTurn = 1;
+            let player1Score = 0;
+            let player2Score = 0;
+            let lastFlippedCard = null;
+            const cards = document.querySelectorAll('.card');
+            const playerTurnElement = document.getElementById('player-turn');
+            const player1ScoreElement = document.getElementById('player1-score');
+            const player2ScoreElement = document.getElementById('player2-score');
+
+            function getRandomImage() {
+                const images = ['car1.jpg', 'car2.jpg', 'car3.jpg', 'car4.jpg', 'car5.jpg', 'car6.jpg', 'car7.jpg', 'car8.jpg'];
+                return images[Math.floor(Math.random() * images.length)];
+            }
+
+            function handleCardClick(card) {
+                if (card.classList.contains('flipped')) return; // Already flipped
+
+                if (lastFlippedCard) {
+                    lastFlippedCard.classList.remove('flipped');
+                    lastFlippedCard.querySelector('.card-back img').src = getRandomImage();
+                }
+
+                card.classList.add('flipped');
+
+                // Add random points
+                const points = Math.floor(Math.random() * 100) + 1;
+
+                if (playerTurn === 1) {
+                    player1Score += points;
+                    player1ScoreElement.textContent = `Player 1 Score: ${player1Score}`;
+                    playerTurn = 2;
+                    playerTurnElement.textContent = "Player 2's Turn";
+                } else {
+                    player2Score += points;
+                    player2ScoreElement.textContent = `Player 2 Score: ${player2Score}`;
+                    playerTurn = 1;
+                    playerTurnElement.textContent = "Player 1's Turn";
+                }
+
+                lastFlippedCard = card;
+            }
+
+            cards.forEach(card => {
+                card.addEventListener('click', function () {
+                    handleCardClick(card);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
